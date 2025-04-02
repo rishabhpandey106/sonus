@@ -5,6 +5,8 @@ import torch
 import google.generativeai as genai
 from dotenv import load_dotenv
 import os
+import re
+import time
 
 load_dotenv()
 
@@ -14,28 +16,24 @@ print(f"Using device: {device}")
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 # for model in genai.list_models():
 #         print(model)
-model = genai.GenerativeModel('models/gemini-2.0-flash-thinking-exp')
+model = genai.GenerativeModel('models/gemini-2.0-flash-lite')
 
 def generate_srt(output_file):
     model = whisper.load_model("large").to(device) 
     result = model.transcribe(output_file, task="transcribe", initial_prompt="The audio is a conversation in Hindi and English.", fp16=(device == "cuda"))
     return result
 
+def is_hindi(text):
+    # Check for presence of Hindi/Devanagari characters
+    return bool(re.search(r'[\u0900-\u097F]', text))
+
 def translate_with_gemini(text):
     try:
-        # prompt = f"""
-        # Detect the language of the given text.  
+        time.sleep(2)
 
-        # 1. If the text is in English, return it as is.  
-        # 2. If the text is in Hindi (including with minor spelling mistakes), convert it to Hinglish.  
-        # 3. If the text is in in any other langauge and appears to be a translation of Hinglish, convert it back to Hinglish.  
-        # 4. If the text is in any other langauge but **not a Hinglish translation**, return it in English.  
-        # 5. Correct any minor spelling errors while translating.  
-        # 6. Return only the processed text without any extra explanations, comments, or formatting.  
-
-        # Text: {text}
-        # """
-
+        if not is_hindi(text):
+            return text
+        
         prompt = f"""
         If the given text is in Hindi (Devanagari script), convert it to **Romanized Hindi** (transliteration, not translation).
         If the text is already in **English**, **return it unchanged**.
@@ -52,9 +50,12 @@ def translate_with_gemini(text):
 
         Text: {text}
         """
-        
+
         response = model.generate_content(prompt)
-        return response.text
+        result_text = response.text.strip()
+        if not result_text:
+            return text
+        return result_text
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
@@ -79,6 +80,6 @@ if __name__ == "__main__":
     output_file = "audio/sample.wav"
     transcript = generate_srt(output_file)
     srt_file = convert_to_srt(transcript)
-    with open("transcript/sample.srt", "w", encoding="utf-8") as f:
+    with open("transcript/sample1.srt", "w", encoding="utf-8") as f:
         f.write(srt_file)
     print("SRT file generated successfully.")
