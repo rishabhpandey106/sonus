@@ -1,6 +1,7 @@
 streamlit
 moviepy==1.0.3
-whisper github
+git+https://github.com/openai/whisper.git 
 srt
 google-generativeai
 python-dotenv
+flask
