@@ -29,12 +29,21 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 model = genai.GenerativeModel('models/gemini-2.0-flash-lite')
 
 def extract_audio(video_path, audio_path):
-    video_clip = VideoFileClip(video_path)
-    audio_clip = video_clip.audio
-    if audio_clip:
-        audio_clip.write_audiofile(audio_path)
-        return True
-    return False
+    try:
+        audio_dir = os.path.dirname(audio_path)
+        if not os.path.exists(audio_dir):
+            os.makedirs(audio_dir)  
+
+        video_clip = VideoFileClip(video_path)
+        audio_clip = video_clip.audio
+
+        if audio_clip:
+            audio_clip.write_audiofile(audio_path)
+            return True
+        return False
+    except Exception as e:
+        print(f"An error occurred while extracting audio: {e}")
+        return False
 
 def transcribe_audio(audio_path):
     whisper_model = whisper.load_model("base").to(device)
