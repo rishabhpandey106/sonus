@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload or Edit SRT File</title>
+</head>
+<body>
+    <h1>Upload an SRT File</h1>
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".srt">
+        <input type="submit" value="Upload">
+    </form>
+
+    <h2>Existing Subtitles</h2>
+    <ul>
+        {% for file in files %}
+            <li>
+                <a href="{{ url_for('edit_file', filename=file) }}">{{ file }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

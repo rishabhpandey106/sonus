@@ -23,16 +23,16 @@ def generate_srt(output_file):
     result = model.transcribe(output_file, task="transcribe", initial_prompt="The audio is a conversation in Hindi and English.", fp16=(device == "cuda"))
     return result
 
-def is_hindi(text):
-    # Check for presence of Hindi/Devanagari characters
-    return bool(re.search(r'[\u0900-\u097F]', text))
+# def is_hindi(text):
+#     # Check for presence of Hindi/Devanagari characters
+#     return bool(re.search(r'[\u0900-\u097F]', text))
 
 def translate_with_gemini(text):
     try:
         time.sleep(2)
 
-        if not is_hindi(text):
-            return text
+        # if not is_hindi(text):
+        #     return text
         
         prompt = f"""
         If the given text is in Hindi (Devanagari script), convert it to **Romanized Hindi** (transliteration, not translation).

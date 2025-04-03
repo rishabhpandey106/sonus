@@ -27,7 +27,7 @@ def burn(video_path, srt_path, output_path, ffmpeg_path):
 if __name__ == "__main__":
     video_path = r"video\sample.mp4"
     srt_path = r"transcript\caption.srt"
-    output_path = r"output\video.mp4"
+    output_path = r"output\video1.mp4"
     ffmpeg_path = r"C:\ffmpeg\bin\ffmpeg.exe"
 
     burn(video_path, srt_path, output_path, ffmpeg_path)
