@@ -117,6 +117,9 @@ def generate_srt(transcript):
     return srt.compose(subtitles)
 
 def burn_subtitles(video_path, srt_path, output_path):
+    output_dir = os.path.dirname(output_path)
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
     ffmpeg_cmd = f'ffmpeg -i "{video_path}" -vf "subtitles={srt_path}" -c:v libx264 -c:a aac "{output_path}"'
     subprocess.run(ffmpeg_cmd, shell=True, check=True)
 
@@ -142,6 +145,9 @@ if uploaded_file:
     if st.button("Generate Subtitles"):
         transcript = transcribe_audio(audio_path)
         srt_content = generate_srt(transcript)
+        srt_dir = os.path.dirname(srt_path)
+        if not os.path.exists(srt_dir):
+            os.makedirs(srt_dir)
         with open(srt_path, "w", encoding="utf-8") as f:
             f.write(srt_content)
         st.success("Subtitles generated successfully!")
