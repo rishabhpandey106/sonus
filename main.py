@@ -105,13 +105,14 @@ def generate_srt(transcript):
         end_time = timedelta(seconds=seg['end'])
         original_text = seg['text'].strip()
         translated_text = asyncio.run(translate_with_gemini(original_text))
-        if translated_text is None or translated_text.strip() == "":
-            translated_text = original_text
+        if not translated_text:
+            translated_text = original_text or "..."
+
         subtitles.append(srt.Subtitle(
             index=i+1,
             start=start_time,
             end=end_time,
-            content=translated_text
+            content=str(translated_text)
         ))
     return srt.compose(subtitles)
 

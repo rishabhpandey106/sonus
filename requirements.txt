@@ -5,3 +5,4 @@ srt
 google-generativeai
 python-dotenv
 flask
+ffmpeg
