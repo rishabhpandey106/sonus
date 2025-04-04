@@ -46,7 +46,7 @@ def extract_audio(video_path, audio_path):
         return False
 
 def transcribe_audio(audio_path):
-    whisper_model = whisper.load_model("large").to(device)
+    whisper_model = whisper.load_model("base").to(device)
 
     result = [None]  # Store result in a mutable list
 
